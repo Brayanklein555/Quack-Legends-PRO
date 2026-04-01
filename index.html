@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeDrive Legends - Deluxe Edition</title>
+    <title>LifeDrive Legends - World Update</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
@@ -28,11 +28,11 @@
             width: 100%;
             height: 100%;
             display: block;
-            background: #111827;
+            background: #0f172a;
         }
 
         .ui-panel {
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -59,7 +59,6 @@
             filter: brightness(1.2);
         }
 
-        /* Menu Styles */
         .menu-overlay {
             position: fixed;
             inset: 0;
@@ -70,15 +69,10 @@
             justify-content: center;
         }
 
-        .save-card {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s;
-        }
-
-        .save-card:hover {
-            border-color: var(--primary);
-            background: rgba(30, 41, 59, 0.8);
+        .shop-modal {
+            background: #0f172a;
+            border: 2px solid #334155;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
 
         .character-option {
@@ -91,6 +85,23 @@
             border-color: var(--primary);
             background: rgba(59, 130, 246, 0.2);
         }
+
+        .interact-prompt {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid #3b82f6;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
     </style>
 </head>
 <body>
@@ -100,51 +111,47 @@
         <div class="w-full max-w-4xl p-8">
             <div class="text-center mb-12">
                 <h1 class="heading text-6xl font-black tracking-tighter text-blue-500 mb-2">LifeDrive</h1>
-                <p class="text-slate-400 tracking-[0.3em] uppercase text-sm">Legends Edition</p>
+                <p class="text-slate-400 tracking-[0.3em] uppercase text-sm">Legends World</p>
             </div>
-
-            <div id="save-slots" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Slots de save gerados via JS -->
-            </div>
+            <div id="save-slots" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </div>
     </div>
 
-    <!-- SELEÇÃO DE PERSONAGEM -->
+    <!-- SELEÇÃO DE PERSONAGEM EDITÁVEL -->
     <div id="char-selection" class="menu-overlay hidden">
         <div class="w-full max-w-5xl p-8">
-            <h2 class="heading text-3xl mb-8 text-center">Escolha seu Legend</h2>
+            <h2 class="heading text-3xl mb-8 text-center uppercase tracking-widest">Crie seu Legend</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-                <div onclick="selectChar(0)" class="character-option p-6 rounded-3xl bg-slate-900/50 text-center" id="char-0">
-                    <div class="w-24 h-24 bg-blue-500 rounded-full mx-auto mb-4 shadow-[0_0_20px_rgba(59,130,246,0.5)]"></div>
-                    <h3 class="font-bold">Runner</h3>
-                    <p class="text-xs text-slate-400 mt-2">Foco em Velocidade e Exploração</p>
+                <div onclick="selectChar(0, '#3b82f6')" class="character-option p-6 rounded-3xl bg-slate-900/50 text-center" id="char-0">
+                    <div class="w-24 h-24 bg-blue-500 rounded-full mx-auto mb-4 shadow-lg"></div>
+                    <h3 class="font-bold">Runner (Azul)</h3>
                 </div>
-                <div onclick="selectChar(1)" class="character-option p-6 rounded-3xl bg-slate-900/50 text-center" id="char-1">
-                    <div class="w-24 h-24 bg-red-500 rounded-full mx-auto mb-4 shadow-[0_0_20px_rgba(239,68,68,0.5)]"></div>
-                    <h3 class="font-bold">Drifter</h3>
-                    <p class="text-xs text-slate-400 mt-2">Inicia com um carro melhor</p>
+                <div onclick="selectChar(1, '#ef4444')" class="character-option p-6 rounded-3xl bg-slate-900/50 text-center" id="char-1">
+                    <div class="w-24 h-24 bg-red-500 rounded-full mx-auto mb-4 shadow-lg"></div>
+                    <h3 class="font-bold">Racer (Vermelho)</h3>
                 </div>
-                <div onclick="selectChar(2)" class="character-option p-6 rounded-3xl bg-slate-900/50 text-center" id="char-2">
-                    <div class="w-24 h-24 bg-green-500 rounded-full mx-auto mb-4 shadow-[0_0_20px_rgba(34,197,94,0.5)]"></div>
-                    <h3 class="font-bold">Builder</h3>
-                    <p class="text-xs text-slate-400 mt-2">Bônus em recursos e construção</p>
+                <div onclick="selectChar(2, '#22c55e')" class="character-option p-6 rounded-3xl bg-slate-900/50 text-center" id="char-2">
+                    <div class="w-24 h-24 bg-green-500 rounded-full mx-auto mb-4 shadow-lg"></div>
+                    <h3 class="font-bold">Worker (Verde)</h3>
                 </div>
-                <div onclick="selectChar(3)" class="character-option p-6 rounded-3xl bg-slate-900/50 text-center" id="char-3">
-                    <div class="w-24 h-24 bg-purple-500 rounded-full mx-auto mb-4 shadow-[0_0_20px_rgba(168,85,247,0.5)]"></div>
-                    <h3 class="font-bold">Tycoon</h3>
-                    <p class="text-xs text-slate-400 mt-2">Inicia com mais dinheiro</p>
+                <div onclick="selectChar(3, '#f59e0b')" class="character-option p-6 rounded-3xl bg-slate-900/50 text-center" id="char-3">
+                    <div class="w-24 h-24 bg-amber-500 rounded-full mx-auto mb-4 shadow-lg"></div>
+                    <h3 class="font-bold">Rich (Ouro)</h3>
                 </div>
             </div>
             <div class="flex flex-col items-center gap-4">
-                <input type="text" id="player-name-input" placeholder="Nome do seu Legend..." class="bg-slate-800 border border-slate-700 px-6 py-3 rounded-full w-64 text-center focus:outline-none focus:border-blue-500">
-                <button onclick="confirmCharacter()" class="bg-blue-600 hover:bg-blue-500 px-12 py-4 rounded-full font-bold heading tracking-widest">INICIAR JORNADA</button>
+                <div class="flex gap-2 mb-4">
+                    <p class="text-xs text-slate-400">Customizar Cor:</p>
+                    <input type="color" id="char-color-custom" value="#3b82f6" class="bg-transparent border-none w-8 h-8 cursor-pointer">
+                </div>
+                <input type="text" id="player-name-input" placeholder="Nome do Personagem..." class="bg-slate-800 border border-slate-700 px-6 py-3 rounded-full w-64 text-center focus:outline-none focus:border-blue-500">
+                <button onclick="confirmCharacter()" class="bg-blue-600 hover:bg-blue-500 px-12 py-4 rounded-full font-bold heading tracking-widest">ENTRAR NO MUNDO</button>
             </div>
         </div>
     </div>
 
-    <!-- HUD DO JOGO (Visível apenas durante o gameplay) -->
+    <!-- HUD DO JOGO -->
     <div id="game-hud" class="hidden">
-        <!-- HUD Superior -->
         <div class="fixed top-0 left-0 w-full p-4 flex justify-between items-center z-50 ui-panel border-b">
             <div class="flex items-center gap-6">
                 <div class="flex flex-col">
@@ -164,24 +171,21 @@
             </div>
         </div>
 
-        <!-- HUD Necessidades -->
         <div class="fixed left-4 top-24 w-48 space-y-4 z-40">
             <div class="ui-panel p-3 rounded-xl">
-                <p class="text-[10px] font-bold mb-1 flex justify-between">FOME <span>🍔</span></p>
+                <p class="text-[10px] font-bold mb-1 flex justify-between uppercase">Fome <span id="val-hunger">100</span></p>
                 <div class="status-bar"><div id="need-hunger" class="status-fill bg-orange-500" style="width: 100%"></div></div>
-                <p class="text-[10px] font-bold mt-2 mb-1 flex justify-between">ENERGIA <span>⚡</span></p>
+                <p class="text-[10px] font-bold mt-2 mb-1 flex justify-between uppercase">Energia <span id="val-energy">100</span></p>
                 <div class="status-bar"><div id="need-energy" class="status-fill bg-yellow-400" style="width: 100%"></div></div>
-                <p class="text-[10px] font-bold mt-2 mb-1 flex justify-between">SOCIAL <span>👥</span></p>
-                <div class="status-bar"><div id="need-social" class="status-fill bg-blue-400" style="width: 100%"></div></div>
             </div>
             
-            <div id="pet-panel" class="ui-panel p-3 rounded-xl border-l-4 border-yellow-500">
-                <h3 class="text-[10px] font-black uppercase text-yellow-500 mb-2">Pet: <span id="pet-name">Pipo</span></h3>
-                <div class="grid grid-cols-2 gap-1 text-[8px] font-bold">
-                    <div class="bg-slate-800 p-1 rounded">RUN: <span id="pet-run">1</span></div>
-                    <div class="bg-slate-800 p-1 rounded">FLY: <span id="pet-fly">1</span></div>
+            <div id="pet-panel" class="ui-panel p-3 rounded-xl border-l-4 border-blue-500">
+                <h3 class="text-[10px] font-black uppercase text-blue-400 mb-1">Estatísticas</h3>
+                <div class="space-y-1 text-[9px] font-bold">
+                    <div class="flex justify-between">CORRIDA: <span id="stat-run">1</span></div>
+                    <div class="flex justify-between">CONSTRUÇÃO: <span id="stat-build">1</span></div>
+                    <div class="flex justify-between">CARRO (MAX): <span id="stat-car">12</span></div>
                 </div>
-                <button onclick="trainPet()" class="w-full mt-2 bg-yellow-600 hover:bg-yellow-500 text-white text-[9px] py-1 rounded font-bold uppercase">Treinar</button>
             </div>
         </div>
 
@@ -197,6 +201,23 @@
                 <span>🧱</span> <span class="text-[10px] font-bold uppercase">Build</span>
             </button>
         </div>
+
+        <div id="interact-ui" class="hidden interact-prompt text-white font-bold text-sm">
+            Pressione <span class="bg-white text-black px-2 rounded">E</span> para interagir
+        </div>
+    </div>
+
+    <!-- MODAL DE LOJAS -->
+    <div id="shop-modal" class="hidden fixed inset-0 z-[2000] bg-black/80 flex items-center justify-center p-4">
+        <div class="shop-modal w-full max-w-lg rounded-3xl overflow-hidden">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center bg-slate-800">
+                <h2 id="shop-title" class="heading text-xl uppercase tracking-widest">Loja</h2>
+                <button onclick="closeShop()" class="text-3xl">&times;</button>
+            </div>
+            <div id="shop-items" class="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+                <!-- Items dinâmicos -->
+            </div>
+        </div>
     </div>
 
     <canvas id="game-canvas"></canvas>
@@ -205,30 +226,59 @@
 
     <script>
         /**
-         * LIFE DRIVE LEGENDS - LÓGICA CORE
+         * LIFE DRIVE LEGENDS - WORLD UPDATE
          */
-        
+
         let currentSaveSlot = null;
         let selectedCharIndex = 0;
+        let activePOI = null;
 
         const BaseStats = [
             { type: 'Runner', color: '#3b82f6', cash: 1000, speedMult: 1.2 },
-            { type: 'Drifter', color: '#ef4444', cash: 800, speedMult: 1.0 },
-            { type: 'Builder', color: '#22c55e', cash: 1200, speedMult: 0.9 },
-            { type: 'Tycoon', color: '#a855f7', cash: 5000, speedMult: 0.8 }
+            { type: 'Racer', color: '#ef4444', cash: 800, speedMult: 1.0 },
+            { type: 'Worker', color: '#22c55e', cash: 1200, speedMult: 0.9 },
+            { type: 'Rich', color: '#f59e0b', cash: 15000, speedMult: 0.8 }
+        ];
+
+        // Definição dos Pontos de Interesse (Lojas/Prédios)
+        const WorldPOIs = [
+            { id: 'market', name: 'Mercado Fresh', x: 1800, y: 1800, w: 150, h: 100, color: '#10b981', items: [
+                { name: 'Maçã', cost: 10, type: 'food', val: 15 },
+                { name: 'Burger', cost: 45, type: 'food', val: 50 },
+                { name: 'Energético', cost: 30, type: 'energy', val: 25 }
+            ]},
+            { id: 'garage', name: 'Oficina Turbo', x: 2200, y: 1800, w: 150, h: 100, color: '#f43f5e', items: [
+                { name: 'Melhorar Motor V1', cost: 1500, type: 'car_speed', val: 2 },
+                { name: 'Melhorar Motor V2', cost: 5000, type: 'car_speed', val: 5 },
+                { name: 'Pneus Drift', cost: 800, type: 'car_handling', val: 1 }
+            ]},
+            { id: 'gym', name: 'Centro de Treino', x: 1800, y: 2200, w: 150, h: 100, color: '#3b82f6', items: [
+                { name: 'Treino de Cardio', cost: 200, type: 'stat_run', val: 1 },
+                { name: 'Suplementos', cost: 500, type: 'energy_max', val: 10 }
+            ]},
+            { id: 'build_shop', name: 'Material de Construção', x: 2200, y: 2200, w: 150, h: 100, color: '#f59e0b', items: [
+                { name: 'Kit Tijolos', cost: 300, type: 'stat_build', val: 1 },
+                { name: 'Decoração Básica', cost: 1000, type: 'house_beauty', val: 5 }
+            ]},
+            { id: 'realty', name: 'Imobiliária Prime', x: 2000, y: 2500, w: 200, h: 120, color: '#8b5cf6', items: [
+                { name: 'Terreno Vazio (Norte)', cost: 10000, type: 'land', val: 1 },
+                { name: 'Casa Pronta (Centro)', cost: 50000, type: 'house', val: 1 }
+            ]}
         ];
 
         let GameState = {
             player: {
                 name: "Legend",
                 charType: 0,
+                color: '#3b82f6',
                 cash: 0,
                 level: 1,
-                needs: { hunger: 100, energy: 100, social: 100 },
+                needs: { hunger: 100, energy: 100 },
+                stats: { run: 1, build: 1, car_speed: 12 },
                 pos: { x: 2000, y: 2000 },
-                mode: 'explore'
+                mode: 'explore',
+                inventory: []
             },
-            pet: { name: 'Pipo', skills: { running: 1, flying: 1 } },
             world: { time: 480, weather: 'sunny' }
         };
 
@@ -240,25 +290,21 @@
         function initMenu() {
             const container = document.getElementById('save-slots');
             container.innerHTML = '';
-            
             for (let i = 1; i <= 3; i++) {
-                const saveData = JSON.parse(localStorage.getItem(`lifedrive_save_${i}`));
+                const saveData = JSON.parse(localStorage.getItem(`lifedrive_world_save_${i}`));
                 const card = document.createElement('div');
                 card.className = 'save-card p-6 rounded-3xl cursor-pointer flex flex-col items-center text-center';
-                
                 if (saveData) {
                     card.innerHTML = `
-                        <div class="w-16 h-16 rounded-full mb-4" style="background: ${BaseStats[saveData.player.charType].color}"></div>
-                        <h3 class="font-bold text-xl">${saveData.player.name}</h3>
+                        <div class="w-16 h-16 rounded-full mb-4" style="background: ${saveData.player.color}"></div>
+                        <h3 class="font-bold text-xl uppercase">${saveData.player.name}</h3>
                         <p class="text-blue-400 text-sm">LVL ${saveData.player.level} • R$ ${saveData.player.cash}</p>
                         <button onclick="loadGame(${i})" class="mt-6 bg-blue-600 w-full py-2 rounded-xl font-bold">CARREGAR</button>
-                        <button onclick="deleteSave(${i})" class="mt-2 text-red-500 text-xs">Apagar Progresso</button>
                     `;
                 } else {
                     card.innerHTML = `
                         <div class="w-16 h-16 border-2 border-dashed border-slate-700 rounded-full mb-4 flex items-center justify-center text-2xl text-slate-700">+</div>
                         <h3 class="font-bold text-slate-500 text-xl">Vazio</h3>
-                        <p class="text-slate-600 text-sm">Novo Slot de Carreira</p>
                         <button onclick="startNewGame(${i})" class="mt-6 bg-slate-800 hover:bg-slate-700 w-full py-2 rounded-xl font-bold">NOVO JOGO</button>
                     `;
                 }
@@ -270,11 +316,13 @@
             currentSaveSlot = slot;
             document.getElementById('main-menu').classList.add('hidden');
             document.getElementById('char-selection').classList.remove('hidden');
-            selectChar(0);
+            selectChar(0, '#3b82f6');
         }
 
-        function selectChar(index) {
+        function selectChar(index, color) {
             selectedCharIndex = index;
+            GameState.player.color = color;
+            document.getElementById('char-color-custom').value = color;
             document.querySelectorAll('.character-option').forEach((el, i) => {
                 if (i === index) el.classList.add('selected');
                 else el.classList.remove('selected');
@@ -283,49 +331,36 @@
 
         function confirmCharacter() {
             const name = document.getElementById('player-name-input').value || "Legend";
+            const customColor = document.getElementById('char-color-custom').value;
             const stats = BaseStats[selectedCharIndex];
             
             GameState.player.name = name;
+            GameState.player.color = customColor;
             GameState.player.charType = selectedCharIndex;
             GameState.player.cash = stats.cash;
             
-            saveGame();
             startGame();
         }
 
         function loadGame(slot) {
             currentSaveSlot = slot;
-            const data = JSON.parse(localStorage.getItem(`lifedrive_save_${slot}`));
-            GameState = data;
+            GameState = JSON.parse(localStorage.getItem(`lifedrive_world_save_${slot}`));
             startGame();
         }
 
-        function deleteSave(slot) {
-            if (confirm("Tem certeza que deseja apagar este save?")) {
-                localStorage.removeItem(`lifedrive_save_${slot}`);
-                initMenu();
-            }
-        }
-
-        function saveGame() {
-            if (currentSaveSlot) {
-                localStorage.setItem(`lifedrive_save_${currentSaveSlot}`, JSON.stringify(GameState));
-            }
-        }
-
         function startGame() {
-            document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('char-selection').classList.add('hidden');
+            document.querySelectorAll('.menu-overlay').forEach(m => m.classList.add('hidden'));
             document.getElementById('game-hud').classList.remove('hidden');
-            
             document.getElementById('display-name').innerText = GameState.player.name;
             resizeCanvas();
             updateUI();
-            
-            // Loop de auto-save a cada 30 segundos
-            setInterval(saveGame, 30000);
-            
+            setInterval(saveGame, 10000); // Auto-save 10s
+            setInterval(drainNeeds, 5000); // Drenar necessidades 5s
             requestAnimationFrame(gameLoop);
+        }
+
+        function saveGame() {
+            if (currentSaveSlot) localStorage.setItem(`lifedrive_world_save_${currentSaveSlot}`, JSON.stringify(GameState));
         }
 
         function exitToMenu() {
@@ -336,7 +371,10 @@
         // --- GAMEPLAY CORE ---
 
         const keys = {};
-        window.onkeydown = (e) => keys[e.code] = true;
+        window.onkeydown = (e) => {
+            keys[e.code] = true;
+            if (e.code === 'KeyE') handleInteraction();
+        };
         window.onkeyup = (e) => keys[e.code] = false;
 
         function resizeCanvas() {
@@ -346,107 +384,159 @@
 
         function gameLoop() {
             if (document.getElementById('game-hud').classList.contains('hidden')) return;
-            
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             updateLogic();
             drawScene();
-            
             requestAnimationFrame(gameLoop);
         }
 
         function updateLogic() {
-            let speed = 5;
-            if (GameState.player.mode === 'drive') speed = 12;
+            let speed = GameState.player.mode === 'drive' ? GameState.player.stats.car_speed : (4 + GameState.player.stats.run * 0.5);
             
-            // Multiplicador do personagem
-            speed *= BaseStats[GameState.player.charType].speedMult;
-
-            // Movimentação básica do Mundo (Câmera foca no centro, o mundo se move)
             if (keys['KeyW']) GameState.player.pos.y -= speed;
             if (keys['KeyS']) GameState.player.pos.y += speed;
             if (keys['KeyA']) GameState.player.pos.x -= speed;
             if (keys['KeyD']) GameState.player.pos.x += speed;
 
-            // Simulação básica de tempo
-            GameState.world.time += 0.1;
+            // Checar POIs próximos
+            activePOI = null;
+            WorldPOIs.forEach(poi => {
+                const dx = Math.abs(GameState.player.pos.x - (poi.x + poi.w/2));
+                const dy = Math.abs(GameState.player.pos.y - (poi.y + poi.h/2));
+                if (dx < poi.w && dy < poi.h) {
+                    activePOI = poi;
+                }
+            });
+
+            const interactUI = document.getElementById('interact-ui');
+            if (activePOI) interactUI.classList.remove('hidden');
+            else interactUI.classList.add('hidden');
+
+            GameState.world.time += 0.05;
             if (GameState.world.time >= 1440) GameState.world.time = 0;
+            updateTimeDisplay();
         }
 
         function drawScene() {
             const camX = canvas.width/2 - GameState.player.pos.x;
             const camY = canvas.height/2 - GameState.player.pos.y;
 
-            // 1. CENÁRIOS / BIOMAS
-            // Grama (Fundo geral)
-            ctx.fillStyle = '#065f46';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
             ctx.save();
             ctx.translate(camX, camY);
 
-            // Desenhar Grid Infinita
-            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-            const step = 200;
-            for(let x=0; x<4000; x+=step) {
-                for(let y=0; y<4000; y+=step) {
-                    // Bioma Deserto
-                    if (x > 2500 && y < 1500) {
-                        ctx.fillStyle = '#78350f';
-                        ctx.fillRect(x, y, step, step);
-                    }
-                    // Bioma Cidade (Asfalto)
-                    else if (x < 1500 && y > 2500) {
-                        ctx.fillStyle = '#1e293b';
-                        ctx.fillRect(x, y, step, step);
-                    }
-                    ctx.strokeRect(x, y, step, step);
-                }
-            }
+            // Chão (Cidade)
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, 0, 4000, 4000);
 
-            // Marcos Visuais
-            ctx.fillStyle = '#334155';
-            ctx.fillRect(500, 500, 300, 200); // Shopping
-            ctx.fillStyle = '#fff'; ctx.fillText("LEGENDS MALL", 550, 600);
-
-            ctx.fillStyle = '#0f172a';
-            ctx.fillRect(3000, 3000, 400, 400); // Pista de Corridas
-            ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 5; ctx.strokeRect(3050, 3050, 300, 300);
-
-            // NPCs Aleatórios
-            ctx.fillStyle = '#ec4899';
-            ctx.beginPath(); ctx.arc(1000, 1000, 15, 0, Math.PI*2); ctx.fill();
+            // Desenhar Prédios / POIs
+            WorldPOIs.forEach(poi => {
+                ctx.fillStyle = poi.color;
+                ctx.fillRect(poi.x, poi.y, poi.w, poi.h);
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 12px Orbitron';
+                ctx.fillText(poi.name.toUpperCase(), poi.x, poi.y - 10);
+                
+                // Sombra do Prédio
+                ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                ctx.fillRect(poi.x + 5, poi.y + poi.h, poi.w, 10);
+            });
 
             ctx.restore();
 
-            // 2. PLAYER (Centralizado na tela)
+            // Player
             const pX = canvas.width/2;
             const pY = canvas.height/2;
-            const pColor = BaseStats[GameState.player.charType].color;
-
+            ctx.fillStyle = GameState.player.color;
+            
             if (GameState.player.mode === 'drive') {
-                ctx.fillStyle = pColor;
                 ctx.fillRect(pX-15, pY-25, 30, 50);
-                ctx.fillStyle = '#000'; ctx.fillRect(pX-18, pY-20, 5, 10); ctx.fillRect(pX+13, pY-20, 5, 10);
+                ctx.fillStyle = '#000'; ctx.fillRect(pX-12, pY-20, 24, 15);
             } else {
-                ctx.fillStyle = pColor;
                 ctx.beginPath(); ctx.arc(pX, pY, 15, 0, Math.PI*2); ctx.fill();
-                // Plumbob
-                ctx.fillStyle = '#22c55e';
-                ctx.beginPath();
-                ctx.moveTo(pX, pY-45); ctx.lineTo(pX+8, pY-35); ctx.lineTo(pX, pY-25); ctx.lineTo(pX-8, pY-35);
-                ctx.fill();
+                ctx.fillStyle = '#22c55e'; ctx.beginPath();
+                ctx.moveTo(pX, pY-45); ctx.lineTo(pX+8, pY-35); ctx.lineTo(pX, pY-25); ctx.lineTo(pX-8, pY-35); ctx.fill();
             }
+        }
+
+        // --- SISTEMA DE INTERAÇÃO E LOJAS ---
+
+        function handleInteraction() {
+            if (!activePOI) return;
+            
+            const modal = document.getElementById('shop-modal');
+            const itemsCont = document.getElementById('shop-items');
+            const title = document.getElementById('shop-title');
+            
+            title.innerText = activePOI.name;
+            itemsCont.innerHTML = '';
+            
+            activePOI.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-4 bg-slate-800/50 rounded-xl border border-slate-700';
+                div.innerHTML = `
+                    <div>
+                        <p class="font-bold">${item.name}</p>
+                        <p class="text-xs text-green-400">R$ ${item.cost}</p>
+                    </div>
+                    <button onclick="buyItem('${activePOI.id}', '${item.name}')" class="bg-blue-600 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-500">COMPRAR</button>
+                `;
+                itemsCont.appendChild(div);
+            });
+            
+            modal.classList.remove('hidden');
+        }
+
+        function buyItem(poiId, itemName) {
+            const poi = WorldPOIs.find(p => p.id === poiId);
+            const item = poi.items.find(i => i.name === itemName);
+            
+            if (GameState.player.cash >= item.cost) {
+                GameState.player.cash -= item.cost;
+                applyItemEffect(item);
+                updateUI();
+                notify(`Comprou ${item.name}!`, "green");
+            } else {
+                notify("Dinheiro insuficiente!", "red");
+            }
+        }
+
+        function applyItemEffect(item) {
+            switch(item.type) {
+                case 'food': GameState.player.needs.hunger = Math.min(100, GameState.player.needs.hunger + item.val); break;
+                case 'energy': GameState.player.needs.energy = Math.min(100, GameState.player.needs.energy + item.val); break;
+                case 'car_speed': GameState.player.stats.car_speed += item.val; break;
+                case 'stat_run': GameState.player.stats.run += item.val; break;
+                case 'stat_build': GameState.player.stats.build += item.val; break;
+                case 'land': notify("Terreno adquirido! Use o modo BUILD para construir.", "blue"); break;
+            }
+        }
+
+        function closeShop() {
+            document.getElementById('shop-modal').classList.add('hidden');
+        }
+
+        function drainNeeds() {
+            GameState.player.needs.hunger = Math.max(0, GameState.player.needs.hunger - 1);
+            GameState.player.needs.energy = Math.max(0, GameState.player.needs.energy - 0.5);
+            updateUI();
         }
 
         function updateUI() {
             document.getElementById('cash-display').innerText = `R$ ${GameState.player.cash.toLocaleString('pt-BR')}`;
-            document.getElementById('level-display').innerText = `LVL ${GameState.player.level}`;
-            document.getElementById('pet-run').innerText = GameState.pet.skills.running;
-            document.getElementById('pet-fly').innerText = GameState.pet.skills.flying;
+            document.getElementById('need-hunger').style.width = `${GameState.player.needs.hunger}%`;
+            document.getElementById('need-energy').style.width = `${GameState.player.needs.energy}%`;
+            document.getElementById('val-hunger').innerText = Math.floor(GameState.player.needs.hunger);
+            document.getElementById('val-energy').innerText = Math.floor(GameState.player.needs.energy);
             
-            const hours = Math.floor(GameState.world.time / 60).toString().padStart(2, '0');
-            const mins = Math.floor(GameState.world.time % 60).toString().padStart(2, '0');
-            document.getElementById('game-time').innerText = `${hours}:${mins}`;
+            document.getElementById('stat-run').innerText = GameState.player.stats.run;
+            document.getElementById('stat-build').innerText = GameState.player.stats.build;
+            document.getElementById('stat-car').innerText = GameState.player.stats.car_speed + " KM/H";
+        }
+
+        function updateTimeDisplay() {
+            const h = Math.floor(GameState.world.time / 60).toString().padStart(2, '0');
+            const m = Math.floor(GameState.world.time % 60).toString().padStart(2, '0');
+            document.getElementById('game-time').innerText = `${h}:${m}`;
         }
 
         function setMode(mode) {
@@ -460,19 +550,9 @@
             n.className = `bg-${color}-600/90 p-3 rounded-xl text-[10px] font-bold shadow-lg border border-white/10`;
             n.innerText = msg;
             area.appendChild(n);
-            setTimeout(() => {
-                n.style.opacity = '0';
-                setTimeout(() => n.remove(), 500);
-            }, 3000);
+            setTimeout(() => { n.style.opacity = '0'; setTimeout(() => n.remove(), 500); }, 3000);
         }
 
-        function trainPet() {
-            GameState.pet.skills.running += 1;
-            updateUI();
-            notify("Pet treinou Corrida!", "yellow");
-        }
-
-        // Inicializar Menu ao carregar
         window.onload = initMenu;
         window.addEventListener('resize', resizeCanvas);
 
